@@ -1,28 +1,14 @@
 import { test, expect } from '@playwright/test';
-test.describe('méthode POST' ,() => {
+import { defaultBooking } from '../utils/booking.data';
 
-test('add book',async({request})=> {
-const book={
-    firstname :"cyrine",
-    lastname  :"yef",
-    totalprice :    5,
-    depositpaid :true,
-    bookingdates:{
-        checkin :"2026-05-09",
-        checkout:"2026-05-16",},
-    additionalneeds :"tesg" }
-    
+test.describe('méthode POST', () => {
 
-
-   const res=await request.post('/booking',{data:book});
-expect (res.status()).toBe(200);
-const body = await res.json();
-    console.log(body);
+  test('add book', async ({ request }) => {
+    const res = await request.post('/booking', { data: defaultBooking });
+    expect(res.status()).toBe(200);
+    const body = await res.json();
+    expect(body).toHaveProperty('bookingid');
+    expect(body.booking).toEqual(defaultBooking);
   });
 
-
-
 });
-
-
-

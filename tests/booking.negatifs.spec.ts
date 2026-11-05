@@ -1,60 +1,24 @@
 import { test, expect } from '@playwright/test'
-test.describe('PATCH METHOD', () => {
+import { defaultBooking } from '../utils/booking.data';
+import { addBook } from '../utils/booking.helper';
 
-    test('update reservation', async ({ request }) => {
-const booking = {
+test.describe('Tests négatifs', () => {
 
-            firstname: 'tedst',
-            lastname: 'ccdccc',
-            totalprice: 45643,
-            depositpaid: true,
-            bookingdates: {
-                checkin: "2222-10-22",
-                checkout: "4444-11-12"
-            },
-            additionalneeds: 'ffeefefe'
-        }
+    test('PUT sans token → 403 et booking inchangé', async ({ request }) => {
 
- const addbooking = await request.post('/booking', { data: booking });
-        const responsebooking= await addbooking.json();
-        console.log(responsebooking)
-        expect (responsebooking).toHaveProperty('bookingid');
-        const bookid =  responsebooking.bookingid;
-        
-        console.log(bookid);
+        const bookid = await addBook(request, defaultBooking);
 
         const bookupdate = {
-
-            firstname: 'update',
-            lastname: 'ccdccc',
-            totalprice: 45643,
-            depositpaid: true,
-            bookingdates: {
-                checkin: "2222-10-22",
-                checkout: "4444-11-12"
-            },
-            additionalneeds: 'ffeefefe'
+            ...defaultBooking,
+            firstname: 'firstfirst'
         }
- const req = await request.put(`/booking/${bookid}`,{data:bookupdate});
+        const req = await request.put(`/booking/${bookid}`, { data: bookupdate });
+        expect(req.status()).toBe(403);
 
-    expect (req.status()).toBe(403);
-
-const reqget=await request.get(`/booking/${bookid}`);
-expect (reqget.status()).toBe(200);
-const json =await reqget.json();
-const firstnameold=json.firstname;
-const oldfirstname=booking.firstname;
-const newfisrname=bookupdate.firstname;
-expect (oldfirstname).not.toBe(newfisrname);
-
-
-
+        const reqget = await request.get(`/booking/${bookid}`);
+        expect(reqget.status()).toBe(200);
+        const json = await reqget.json();
+        expect(json.firstname).toBe(defaultBooking.firstname);
     })
-
-
-
-
-
-
 
 })
