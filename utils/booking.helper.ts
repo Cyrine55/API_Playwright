@@ -27,3 +27,9 @@ const book=await bookreq.json();
 
 }
 
+export async function deletebook(request:APIRequestContext,bookid:number,token:string){
+    const bookdeletereq= await request.delete(`/booking/${bookid}`,
+        {headers:{Cookie:`token=${token}` }})
+        expect(bookdeletereq.status()).toBe(201);
+    
+}
