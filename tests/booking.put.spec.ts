@@ -1,4 +1,4 @@
-import { test, expect, request } from '@playwright/test';
+import { test, expect } from '@playwright/test';
 import { getToken,addBook ,deletebook} from '../utils/booking.helper';
 import { defaultBooking } from '../utils/booking.data';
 

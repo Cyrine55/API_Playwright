@@ -1,10 +1,10 @@
 import { expect, APIRequestContext } from '@playwright/test'
 export async function getToken(request: APIRequestContext) {
 
-    const auth = {
-        username: 'admin',
-        password: 'password123'
-    }
+   const auth = {
+    username: process.env.API_USERNAME,
+    password: process.env.API_PASSWORD
+}
     const tokenreq = await request.post('/auth', { data: auth })
     expect(tokenreq.status()).toBe(200);
 
