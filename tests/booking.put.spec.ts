@@ -1,15 +1,22 @@
-import { test, expect } from '@playwright/test';
-import { getToken,addBook } from '../utils/booking.helper';
+import { test, expect, request } from '@playwright/test';
+import { getToken,addBook ,deletebook} from '../utils/booking.helper';
 import { defaultBooking } from '../utils/booking.data';
+
+
+
 test.describe('PUT test', () => {
+    let token:string;
+    let bookid:number
+test.beforeEach(async({request})=>{
+token=await getToken(request);
+bookid=await addBook(request, defaultBooking);
+})
+test.afterEach(async({request})=>{
+await deletebook(request, bookid, token);
+    })
 
-    test('update reservation', async ({ request }) => {
 
-      const token=await getToken(request);
-
-
-
-   const bookid=await addBook(request,defaultBooking)     
+    test('update reservation', async ({ request }) => {  
 
 const bookupdate = {
 

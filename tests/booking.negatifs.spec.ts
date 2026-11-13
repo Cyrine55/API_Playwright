@@ -1,12 +1,22 @@
-import { test, expect } from '@playwright/test'
+import { test, expect, request } from '@playwright/test'
 import { defaultBooking } from '../utils/booking.data';
-import { addBook } from '../utils/booking.helper';
+import { addBook , deletebook,getToken} from '../utils/booking.helper';
+
+
+
 
 test.describe('Tests négatifs', () => {
-
+    let bookid:number
+    test.beforeEach(async({request})=>{
+        bookid=await addBook(request, defaultBooking);
+    })
+    test.afterEach(async ({ request }) => {
+        const token = await getToken(request);
+        await deletebook(request, bookid, token);
+    })
     test('PUT sans token → 403 et booking inchangé', async ({ request }) => {
 
-        const bookid = await addBook(request, defaultBooking);
+       
 
         const bookupdate = {
             ...defaultBooking,
@@ -23,7 +33,6 @@ test.describe('Tests négatifs', () => {
 
 test('Patch renvoie 403',async({request})=>{
 
-const bookid=await addBook(request,defaultBooking);
  const newfirstname = {
             firstname: "newnew"
 
@@ -42,7 +51,7 @@ const bookid=await addBook(request,defaultBooking);
 
 
 test('put token invalide',async({request})=> {
-    const bookid= await addBook(request,defaultBooking);
+   
     const updateobject={
         ...defaultBooking,
         firstname:'hhhh'
@@ -55,6 +64,7 @@ test('put token invalide',async({request})=> {
     expect(reqget.status()).toBe(200);
     expect(await reqget.json()).toEqual(defaultBooking);
 })
+
 
 })
 
